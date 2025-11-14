@@ -1,0 +1,469 @@
+<div class="flex h-screen bg-gray-900 text-gray-200">
+  <!-- Sidebar -->
+  <aside class="w-64 bg-gray-800 p-4 flex flex-col">
+    <h1 class="text-2xl font-bold text-white mb-6 flex items-center">
+      <span class="material-symbols-outlined mr-2 text-indigo-400">auto_awesome</span>
+      AI Студия
+    </h1>
+    <nav class="flex flex-col space-y-2">
+      <button (click)="activeFeature.set('chat')" [class.bg-indigo-600]="activeFeature() === 'chat'" class="w-full text-left p-3 rounded-md hover:bg-indigo-500 transition-colors flex items-center">
+        <span class="material-symbols-outlined mr-3">voice_chat</span> Чат-бот
+      </button>
+      <button (click)="activeFeature.set('image-gen')" [class.bg-indigo-600]="activeFeature() === 'image-gen'" class="w-full text-left p-3 rounded-md hover:bg-indigo-500 transition-colors flex items-center">
+        <span class="material-symbols-outlined mr-3">image</span> Генерация изображений
+      </button>
+      <button (click)="activeFeature.set('image-edit')" [class.bg-indigo-600]="activeFeature() === 'image-edit'" class="w-full text-left p-3 rounded-md hover:bg-indigo-500 transition-colors flex items-center">
+        <span class="material-symbols-outlined mr-3">edit_square</span> Анализ и редак.
+      </button>
+       <button (click)="activeFeature.set('video-gen')" [class.bg-indigo-600]="activeFeature() === 'video-gen'" class="w-full text-left p-3 rounded-md hover:bg-indigo-500 transition-colors flex items-center">
+        <span class="material-symbols-outlined mr-3">movie</span> Генерация видео
+      </button>
+      <button (click)="activeFeature.set('video-analyze')" [class.bg-indigo-600]="activeFeature() === 'video-analyze'" class="w-full text-left p-3 rounded-md hover:bg-indigo-500 transition-colors flex items-center">
+        <span class="material-symbols-outlined mr-3">video_library</span> Анализ видео
+      </button>
+      <button (click)="activeFeature.set('audio-transcribe')" [class.bg-indigo-600]="activeFeature() === 'audio-transcribe'" class="w-full text-left p-3 rounded-md hover:bg-indigo-500 transition-colors flex items-center">
+        <span class="material-symbols-outlined mr-3">mic</span> Транскрипция аудио
+      </button>
+      <button (click)="activeFeature.set('audio-gen')" [class.bg-indigo-600]="activeFeature() === 'audio-gen'" class="w-full text-left p-3 rounded-md hover:bg-indigo-500 transition-colors flex items-center">
+        <span class="material-symbols-outlined mr-3">graphic_eq</span> Генерация аудио
+      </button>
+      <button (click)="activeFeature.set('search')" [class.bg-indigo-600]="activeFeature() === 'search'" class="w-full text-left p-3 rounded-md hover:bg-indigo-500 transition-colors flex items-center">
+        <span class="material-symbols-outlined mr-3">travel_explore</span> Поиск с grounding
+      </button>
+      <button (click)="activeFeature.set('fast-response')" [class.bg-indigo-600]="activeFeature() === 'fast-response'" class="w-full text-left p-3 rounded-md hover:bg-indigo-500 transition-colors flex items-center">
+        <span class="material-symbols-outlined mr-3">bolt</span> Быстрый ответ
+      </button>
+      <button (click)="activeFeature.set('complex-query')" [class.bg-indigo-600]="activeFeature() === 'complex-query'" class="w-full text-left p-3 rounded-md hover:bg-indigo-500 transition-colors flex items-center">
+        <span class="material-symbols-outlined mr-3">psychology</span> Сложный запрос
+      </button>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 p-6 lg:p-10 overflow-y-auto bg-gray-900">
+    @if (error()) {
+      <div class="bg-red-800 border border-red-600 text-red-200 px-4 py-3 rounded-lg relative mb-6" role="alert">
+        <strong class="font-bold">Ошибка: </strong>
+        <span class="block sm:inline">{{ error() }}</span>
+        <span class="absolute top-0 bottom-0 right-0 px-4 py-3" (click)="error.set(null)">
+          <svg class="fill-current h-6 w-6 text-red-200" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Закрыть</title><path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"/></svg>
+        </span>
+      </div>
+    }
+
+    @switch (activeFeature()) {
+      @case ('chat') {
+        <div class="flex flex-col h-full">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-3xl font-bold text-white">AI Чат-бот</h2>
+            <div class="flex items-center space-x-4">
+              <div class="flex items-center">
+                <label for="chat-model" class="mr-2 text-gray-300 text-sm">Модель:</label>
+                <select id="chat-model" [(ngModel)]="chatModel" class="bg-gray-700 p-2 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                  @for(model of textModels; track model.id) {
+                    <option [value]="model.id">{{ model.name }}</option>
+                  }
+                </select>
+              </div>
+              <button (click)="clearChatHistory()" class="text-sm bg-gray-600 hover:bg-gray-500 text-white py-2 px-3 rounded-md flex items-center">
+                <span class="material-symbols-outlined mr-1 text-base">delete_sweep</span>
+                Очистить чат
+              </button>
+            </div>
+          </div>
+          <div #chatContainer class="flex-grow bg-gray-800 rounded-lg p-4 overflow-y-auto mb-4">
+             @if (chatHistory().length === 0 && !isChatLoading()) {
+              <div class="text-center text-gray-400">
+                <h3 class="text-lg font-semibold mb-4">Начните диалог</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  @for (prompt of examplePrompts; track prompt) {
+                    <button (click)="sendExamplePrompt(prompt)" class="bg-gray-700 hover:bg-gray-600 p-3 rounded-lg text-left text-sm transition-colors">
+                      {{ prompt }}
+                    </button>
+                  }
+                </div>
+              </div>
+            }
+            @for (message of chatHistory(); track message; let i = $index) {
+              <div class="mb-4" [class.text-right]="message.role === 'user'">
+                <div class="p-3 rounded-lg inline-block max-w-4xl text-left relative group" [class.bg-indigo-600]="message.role === 'user'" [class.bg-gray-700]="message.role === 'model'">
+                  @for(part of message.parts; track $index) {
+                    @if ('text' in part && part.text) {
+                      <div class="markdown-content" [innerHTML]="parseMarkdown(part.text) | safeHtml"></div>
+                    }
+                    @if ('inlineData' in part && part.inlineData) {
+                       <img [src]="'data:' + part.inlineData.mimeType + ';base64,' + part.inlineData.data" alt="User upload" class="max-w-xs rounded-md my-2 max-h-64"/>
+                    }
+                  }
+                   @if (message.role === 'model' && messageHasText(message)) {
+                    <button (click)="translateMessage(i)" 
+                            [disabled]="message.isTranslating"
+                            title="Translate"
+                            class="absolute -top-2 -right-2 bg-gray-900 p-1 rounded-full text-gray-300 hover:bg-gray-600 disabled:opacity-50 disabled:cursor-wait transition-all opacity-0 group-hover:opacity-100 focus:opacity-100">
+                        @if(message.isTranslating) {
+                            <div class="w-4 h-4 border-2 border-gray-300 border-t-transparent rounded-full animate-spin"></div>
+                        } @else if (message.originalParts) {
+                            <span class="text-xs px-1">Оригинал</span>
+                        } @else {
+                             <span class="material-symbols-outlined text-base leading-none">translate</span>
+                        }
+                    </button>
+                  }
+                  @if (isChatLoading() && i === chatHistory().length - 1) {
+                    <div class="animate-pulse flex space-x-1 mt-2">
+                        <div class="h-2 w-2 bg-indigo-300 rounded-full"></div>
+                        <div class="h-2 w-2 bg-indigo-300 rounded-full"></div>
+                        <div class="h-2 w-2 bg-indigo-300 rounded-full"></div>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+          <div class="flex flex-col">
+            @if (isChatFilePresent()) {
+                <div class="p-2 bg-gray-600 rounded-t-md relative self-start">
+                    <img [src]="chatFilePreview()!" class="max-h-24 rounded" alt="File preview">
+                    <button (click)="clearChatFile()" title="Удалить файл" class="absolute -top-2 -right-2 bg-gray-800 rounded-full p-0.5 text-white hover:bg-gray-500 transition-colors">
+                        <span class="material-symbols-outlined text-lg">cancel</span>
+                    </button>
+                </div>
+            }
+            <div class="flex">
+              <input type="text" [(ngModel)]="chatPrompt" (keyup.enter)="sendChatMessage()" placeholder="Введите сообщение или прикрепите файл..." class="flex-grow bg-gray-700 p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500" [class.rounded-l-md]="!isChatFilePresent()" [class.rounded-bl-md]="isChatFilePresent()">
+              <button (click)="chatFileInput.click()" title="Прикрепить файл" class="bg-gray-700 text-white p-3 hover:bg-gray-600">
+                  <span class="material-symbols-outlined">attach_file</span>
+              </button>
+              <input type="file" #chatFileInput (change)="handleChatFileChange($event)" class="hidden" accept="image/*,video/*">
+              <button (click)="toggleVoiceInput()" title="Голосовой ввод" class="bg-gray-700 text-white p-3 hover:bg-gray-600 disabled:bg-gray-800" [class.text-red-500]="isListening()" [class.animate-pulse]="isListening()">
+                <span class="material-symbols-outlined">mic</span>
+              </button>
+              <button (click)="sendChatMessage()" [disabled]="isChatLoading() || (!chatPrompt().trim() && !chatFile())" class="bg-indigo-600 w-28 text-white p-3 rounded-r-md hover:bg-indigo-500 disabled:bg-indigo-800 disabled:text-gray-400 disabled:cursor-not-allowed flex justify-center items-center">
+                @if (isChatLoading()) {
+                  <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                } @else {
+                  <span>Отправить</span>
+                }
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+      @case ('image-gen') {
+        <div>
+          <h2 class="text-3xl font-bold text-white mb-4">Генерация изображений</h2>
+          <div class="bg-gray-800 p-6 rounded-lg space-y-4">
+            <textarea [(ngModel)]="imageGenPrompt" rows="3" placeholder="Введите подробное описание..." class="w-full bg-gray-700 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+            <div class="flex items-center space-x-4 flex-wrap gap-y-2">
+               <label for="image-model" class="self-center">Модель:</label>
+               <select [(ngModel)]="imageGenModel" id="image-model" class="bg-gray-700 p-2 rounded-md">
+                 @for(model of imageModels; track model.id) {
+                   <option [value]="model.id">{{ model.name }}</option>
+                 }
+               </select>
+               <label for="aspect-ratio" class="self-center">Соотношение сторон:</label>
+               <select [(ngModel)]="imageGenAspectRatio" id="aspect-ratio" class="bg-gray-700 p-2 rounded-md">
+                 <option value="1:1">1:1 (Квадрат)</option>
+                 <option value="16:9">16:9 (Альбомная)</option>
+                 <option value="9:16">9:16 (Портретная)</option>
+                 <option value="4:3">4:3</option>
+                 <option value="3:4">3:4</option>
+               </select>
+               <button (click)="generateImage()" [disabled]="isImageGenLoading()" class="bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-500 disabled:bg-gray-600 ml-auto">Сгенерировать</button>
+            </div>
+          </div>
+          <div class="mt-6">
+            @if (isImageGenLoading()) { <app-loading-spinner text="Генерация изображения..."/> }
+            @if (imageGenResult(); as result) {
+              <div class="bg-gray-800 p-4 rounded-lg">
+                <img [src]="result" alt="Generated image" class="max-w-full mx-auto rounded-md">
+                <div class="mt-4 text-center">
+                   <button (click)="exportGeneratedImage()" class="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-500 transition-colors flex items-center mx-auto">
+                      <span class="material-symbols-outlined mr-2">download</span>
+                      Скачать изображение
+                   </button>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      }
+      @case ('image-edit') {
+        <div>
+          <h2 class="text-3xl font-bold text-white mb-4">Анализ и редактирование</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-gray-800 p-6 rounded-lg space-y-4 flex flex-col">
+              <div class="flex items-center space-x-2 mb-2 p-1 bg-gray-700 rounded-lg">
+                <label class="flex-1 text-center p-2 rounded-md cursor-pointer transition-colors" [class.bg-indigo-600]="imageEditMode() === 'analyze'">
+                    <input type="radio" name="edit-mode" value="analyze" [(ngModel)]="imageEditMode" class="sr-only"> Анализ
+                </label>
+                <label class="flex-1 text-center p-2 rounded-md cursor-pointer transition-colors" [class.bg-indigo-600]="imageEditMode() === 'edit'">
+                    <input type="radio" name="edit-mode" value="edit" [(ngModel)]="imageEditMode" class="sr-only"> Редактировать
+                </label>
+              </div>
+
+              <label for="image-upload" class="block text-sm font-medium text-gray-300">1. Загрузите изображение</label>
+              <input type="file" (change)="handleFileChange($event, imageEditFile)" accept="image/*" class="block w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+              @if (imageEditPreview(); as preview) {
+                <img [src]="preview" 
+                     [style.filter]="imageEditMode() === 'edit' ? imagePreviewFilters() : 'none'"
+                     class="mt-2 rounded-lg max-h-48 w-auto self-center transition-all duration-200">
+              }
+              <label for="image-prompt" class="block text-sm font-medium text-gray-300">
+                {{ imageEditMode() === 'analyze' ? '2. Введите запрос' : '2. Опишите правки' }}
+              </label>
+              <textarea [(ngModel)]="imageEditPrompt" id="image-prompt" rows="3" placeholder="например, Опишите это изображение, удалите фон, добавьте ретро-фильтр..." class="w-full bg-gray-700 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+              
+               <div class="flex flex-wrap gap-2 mt-1">
+                <span class="text-sm text-gray-400 self-center mr-2">Примеры правок:</span>
+                @for (example of imageEditExamplePrompts; track example.name) {
+                  <button (click)="applyImageEditPrompt(example.prompt)" class="text-xs bg-gray-600 hover:bg-gray-500 text-white py-1 px-2 rounded-md transition-colors">
+                    {{ example.name }}
+                  </button>
+                }
+              </div>
+
+              @if(imageEditMode() === 'edit' && imageEditPreview()) {
+                <div class="space-y-3 pt-4 border-t border-gray-700 mt-4">
+                   <h3 class="text-sm font-medium text-gray-300">3. Дополнительные настройки</h3>
+                   <div class="grid grid-cols-1 gap-3">
+                     <label class="flex items-center space-x-2">
+                       <span class="w-20">Яркость</span>
+                       <input type="range" min="-100" max="100" [(ngModel)]="imageEditBrightness" class="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer">
+                       <span class="w-10 text-right">{{ imageEditBrightness() }}</span>
+                     </label>
+                     <label class="flex items-center space-x-2">
+                       <span class="w-20">Контраст</span>
+                       <input type="range" min="-100" max="100" [(ngModel)]="imageEditContrast" class="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer">
+                       <span class="w-10 text-right">{{ imageEditContrast() }}</span>
+                     </label>
+                     <label class="flex items-center space-x-2">
+                       <span class="w-20">Насыщен.</span>
+                       <input type="range" min="-100" max="100" [(ngModel)]="imageEditSaturation" class="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer">
+                       <span class="w-10 text-right">{{ imageEditSaturation() }}</span>
+                     </label>
+                   </div>
+                </div>
+              }
+
+              <div class="flex-grow"></div> <!-- Spacer -->
+
+              <button (click)="analyzeOrEditImage()" [disabled]="isImageEditLoading() || !imageEditFile()" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-500 disabled:bg-gray-600 mt-2">
+                {{ imageEditMode() === 'analyze' ? 'Анализировать' : 'Применить' }}
+              </button>
+            </div>
+            <div class="bg-gray-800 p-6 rounded-lg">
+              <div class="flex justify-between items-center mb-2">
+                <h3 class="text-xl font-semibold">Результат</h3>
+                @if (imageEditMode() === 'edit' && imageEditResult() && imageEditResult()?.startsWith('data:image')) {
+                  <button (click)="revertImageEdits()" class="text-sm bg-gray-600 hover:bg-gray-500 text-white py-1 px-3 rounded-md flex items-center">
+                    <span class="material-symbols-outlined mr-1 text-base">restart_alt</span>
+                    К оригиналу
+                  </button>
+                }
+              </div>
+
+              @if (isImageEditLoading()) { 
+                <app-loading-spinner [text]="imageEditMode() === 'analyze' ? 'Анализ изображения...' : 'Редактирование...'"/> 
+              }
+              @if (imageEditResult(); as result) {
+                @if (result.startsWith('data:image')) {
+                  <img [src]="result" alt="Edited image" class="max-w-full mx-auto rounded-md">
+                } @else {
+                  <p class="whitespace-pre-wrap">{{ result }}</p>
+                }
+              }
+            </div>
+          </div>
+        </div>
+      }
+      @case ('video-gen') {
+        <div>
+          <h2 class="text-3xl font-bold text-white mb-4">Генерация видео</h2>
+           <div class="bg-gray-800 p-6 rounded-lg space-y-4">
+             <textarea [(ngModel)]="videoGenPrompt" rows="3" placeholder="Введите подробное описание для вашего видео..." class="w-full bg-gray-700 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+             <div class="flex items-center space-x-4">
+                <label for="video-aspect-ratio">Соотношение сторон:</label>
+                <select [(ngModel)]="videoGenAspectRatio" id="video-aspect-ratio" class="bg-gray-700 p-2 rounded-md">
+                  <option value="16:9">16:9 (Альбомная)</option>
+                  <option value="9:16">9:16 (Портретная)</option>
+                </select>
+             </div>
+             <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Загрузить начальное изображение (необязательно)</label>
+                <input type="file" (change)="handleFileChange($event, videoGenFile)" accept="image/*" class="block w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                @if (videoGenFilePreview(); as preview) {
+                    <img [src]="preview" class="mt-4 rounded-lg max-h-48 w-auto">
+                }
+             </div>
+             <button (click)="generateVideo()" [disabled]="isVideoGenLoading()" class="bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-500 disabled:bg-gray-600">Сгенерировать видео</button>
+           </div>
+           <div class="mt-6">
+             @if (isVideoGenLoading()) { <app-loading-spinner [text]="videoGenLoadingMessage()"/> }
+             @if (videoGenResult(); as result) {
+               <div class="bg-gray-800 p-4 rounded-lg">
+                 <video [src]="result | safeUrl" controls class="max-w-full mx-auto rounded-md"></video>
+                 <div class="mt-4 text-center">
+                    <button (click)="exportGeneratedVideo()" class="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-500 transition-colors flex items-center mx-auto">
+                        <span class="material-symbols-outlined mr-2">download</span>
+                        Скачать видео (.mp4)
+                    </button>
+                 </div>
+               </div>
+             }
+           </div>
+        </div>
+      }
+      @case ('video-analyze') {
+        <div>
+          <h2 class="text-3xl font-bold text-white mb-4">Анализ видео</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-gray-800 p-6 rounded-lg space-y-4">
+              <label for="video-upload" class="block text-sm font-medium text-gray-300">1. Загрузите видео</label>
+              <input type="file" (change)="handleFileChange($event, videoAnalyzeFile)" accept="video/*" class="block w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+              @if (videoAnalyzePreview(); as preview) {
+                <video [src]="preview" controls class="mt-4 rounded-lg max-h-64 w-auto"></video>
+              }
+              <label for="video-prompt" class="block text-sm font-medium text-gray-300">2. Введите запрос</label>
+              <textarea [(ngModel)]="videoAnalyzePrompt" id="video-prompt" rows="3" placeholder="например, Опишите это видео, какие объекты присутствуют?" class="w-full bg-gray-700 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+              <button (click)="analyzeVideo()" [disabled]="isVideoAnalyzeLoading() || !videoAnalyzeFile()" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-500 disabled:bg-gray-600">Анализировать видео</button>
+            </div>
+            <div class="bg-gray-800 p-6 rounded-lg">
+              <h3 class="text-xl font-semibold mb-2">Результат анализа</h3>
+              @if (isVideoAnalyzeLoading()) { <app-loading-spinner text="Анализ видео..."/> }
+              @if (videoAnalyzeResult(); as result) {
+                <p class="whitespace-pre-wrap">{{ result }}</p>
+              }
+            </div>
+          </div>
+        </div>
+      }
+      @case ('audio-transcribe') {
+        <div>
+          <h2 class="text-3xl font-bold text-white mb-4">Транскрипция аудио</h2>
+          <div class="bg-gray-800 p-6 rounded-lg text-center">
+            <button (click)="toggleRecording()" class="px-8 py-4 text-white font-bold rounded-full transition-colors" [class.bg-red-600]="isRecording()" [class.hover:bg-red-500]="isRecording()" [class.bg-green-600]="!isRecording()" [class.hover:bg-green-500]="!isRecording()">
+              <span class="material-symbols-outlined text-4xl align-middle">{{ isRecording() ? 'stop_circle' : 'mic' }}</span>
+              <span class="align-middle ml-2">{{ isRecording() ? 'Остановить запись' : 'Начать запись' }}</span>
+            </button>
+            @if (isAudioLoading()) { <div class="mt-4"><app-loading-spinner text="Транскрибация..."/></div> }
+            @if (audioResult(); as result) {
+              <div class="mt-6 text-left bg-gray-700 p-4 rounded-md">
+                <h3 class="text-xl font-semibold mb-2">Транскрипция:</h3>
+                <p>{{ result }}</p>
+              </div>
+            }
+          </div>
+        </div>
+      }
+       @case ('audio-gen') {
+        <div>
+          <h2 class="text-3xl font-bold text-white mb-4">Генерация аудио</h2>
+          <div class="bg-gray-800 p-6 rounded-lg space-y-4">
+            <textarea [(ngModel)]="audioGenPrompt" rows="4" placeholder="Опишите аудио, которое хотите создать (например, футуристический звуковой эффект, спокойная фоновая музыка, четкий голос, читающий текст)..." class="w-full bg-gray-700 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+            <button (click)="generateAudio()" [disabled]="isAudioGenLoading()" class="bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-500 disabled:bg-gray-600">Сгенерировать аудио</button>
+          </div>
+          <div class="mt-6">
+            @if (isAudioGenLoading()) { <app-loading-spinner text="Генерация аудио..."/> }
+            @if (audioGenResult(); as result) {
+              <div class="bg-gray-800 p-4 rounded-lg">
+                  <h3 class="text-xl font-semibold mb-3">Сгенерированное аудио</h3>
+                  <audio [src]="result | safeUrl" controls class="w-full"></audio>
+              </div>
+            }
+          </div>
+        </div>
+      }
+      @case ('search') {
+        <div>
+          <h2 class="text-3xl font-bold text-white mb-4">Поиск с grounding</h2>
+          <div class="bg-gray-800 p-6 rounded-lg space-y-4">
+             <div class="flex items-center space-x-4">
+                <label>
+                  <input type="radio" name="search-tool" [value]="'googleSearch'" [(ngModel)]="searchTool" class="mr-2"> Google Поиск
+                </label>
+                <label>
+                  <input type="radio" name="search-tool" [value]="'googleMaps'" [(ngModel)]="searchTool" class="mr-2"> Google Карты
+                </label>
+             </div>
+             <textarea [(ngModel)]="searchPrompt" rows="3" placeholder="Задайте вопрос..." class="w-full bg-gray-700 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+             <button (click)="executeSearch()" [disabled]="isSearchLoading()" class="bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-500 disabled:bg-gray-600">Поиск</button>
+          </div>
+           <div class="mt-6">
+              @if (isSearchLoading()) { <app-loading-spinner text="Поиск..."/> }
+              @if (searchResult().text) {
+                <div class="bg-gray-800 p-6 rounded-lg">
+                  <p class="mb-4 whitespace-pre-wrap">{{ searchResult().text }}</p>
+                  @if (searchResult().chunks.length > 0) {
+                    <h4 class="font-semibold text-lg border-t border-gray-700 pt-4">Источники:</h4>
+                    <ul class="list-disc list-inside mt-2 space-y-1">
+                      @for(chunk of searchResult().chunks; track chunk) {
+                        @if (chunk.web) {
+                          <li><a [href]="chunk.web.uri" target="_blank" class="text-indigo-400 hover:underline">{{ chunk.web.title || chunk.web.uri }}</a></li>
+                        }
+                      }
+                    </ul>
+                  }
+                </div>
+              }
+           </div>
+        </div>
+      }
+      @case ('fast-response') {
+        <div>
+            <h2 class="text-3xl font-bold text-white mb-4">Быстрый ответ</h2>
+            <div class="bg-gray-800 p-6 rounded-lg space-y-4">
+                <div class="flex items-center">
+                    <label for="fast-model" class="mr-2 text-gray-300">Модель:</label>
+                    <select id="fast-model" [(ngModel)]="fastResponseModel" class="bg-gray-700 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        @for(model of textModels; track model.id) {
+                            <option [value]="model.id">{{ model.name }}</option>
+                        }
+                    </select>
+                </div>
+                <textarea [(ngModel)]="fastResponsePrompt" rows="3" class="w-full bg-gray-700 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+                <button (click)="getFastResponse()" [disabled]="isFastResponseLoading()" class="bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-500 disabled:bg-gray-600">Получить быстрый ответ</button>
+            </div>
+            <div class="mt-6">
+                @if (isFastResponseLoading()) { <app-loading-spinner text="Получение быстрого ответа..."/> }
+                @if (fastResponseResult(); as result) {
+                    <div class="bg-gray-800 p-6 rounded-lg whitespace-pre-wrap">
+                        {{ result }}
+                    </div>
+                }
+            </div>
+        </div>
+      }
+      @case ('complex-query') {
+        <div>
+            <h2 class="text-3xl font-bold text-white mb-4">Сложный запрос</h2>
+            <div class="bg-gray-800 p-6 rounded-lg space-y-4">
+                <div class="flex items-center">
+                    <label for="complex-model" class="mr-2 text-gray-300">Модель:</label>
+                    <select id="complex-model" [(ngModel)]="complexQueryModel" class="bg-gray-700 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        @for(model of textModels; track model.id) {
+                            <option [value]="model.id">{{ model.name }}</option>
+                        }
+                    </select>
+                </div>
+                 @if (complexQueryModel() === 'gemini-2.5-pro') {
+                    <p class="text-sm text-indigo-400 !mt-2">
+                        <span class="font-bold">Режим размышления:</span> Включен для Gemini 2.5 Pro для предоставления более полных ответов.
+                    </p>
+                }
+                <textarea [(ngModel)]="complexQueryPrompt" rows="4" class="w-full bg-gray-700 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+                <button (click)="getComplexResponse()" [disabled]="isComplexQueryLoading()" class="bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-500 disabled:bg-gray-600">Получить подробный ответ</button>
+            </div>
+            <div class="mt-6">
+                @if (isComplexQueryLoading()) { <app-loading-spinner text="Глубокое размышление..."/> }
+                @if (complexQueryResult(); as result) {
+                    <div class="bg-gray-800 p-6 rounded-lg whitespace-pre-wrap">
+                        {{ result }}
+                    </div>
+                }
+            </div>
+        </div>
+      }
+    }
+  </main>
+</div>

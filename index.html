@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <title>Gemini AI Creative Suite</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings:
+      'FILL' 0,
+      'wght' 400,
+      'GRAD' 0,
+      'opsz' 24
+    }
+    /* Markdown styles */
+    .markdown-content pre {
+        background-color: #1f2937; /* gray-800 */
+        color: #d1d5db; /* gray-300 */
+        padding: 1rem;
+        border-radius: 0.5rem;
+        overflow-x: auto;
+        font-family: monospace;
+    }
+    .markdown-content code {
+        background-color: #374151; /* gray-700 */
+        color: #f3f4f6; /* gray-100 */
+        padding: 0.2em 0.4em;
+        margin: 0;
+        font-size: 85%;
+        border-radius: 3px;
+    }
+    .markdown-content pre code {
+        background-color: transparent;
+        padding: 0;
+    }
+    .markdown-content ul, .markdown-content ol {
+        padding-left: 2em;
+    }
+    .markdown-content ul {
+        list-style-type: disc;
+    }
+    .markdown-content ol {
+        list-style-type: decimal;
+    }
+    .markdown-content blockquote {
+        border-left: 4px solid #4f46e5; /* indigo-600 */
+        padding-left: 1em;
+        margin-left: 0;
+        color: #9ca3af; /* gray-400 */
+    }
+    .markdown-content p {
+      margin-bottom: 0.5rem;
+    }
+  </style>
+<script type="importmap">
+{
+  "imports": {
+    "rxjs": "https://aistudiocdn.com/rxjs@^7.8.2?conditions=es2015",
+    "rxjs/operators": "https://aistudiocdn.com/rxjs@^7.8.2/operators?conditions=es2015",
+    "rxjs/ajax": "https://aistudiocdn.com/rxjs@^7.8.2/ajax?conditions=es2015",
+    "rxjs/webSocket": "https://aistudiocdn.com/rxjs@^7.8.2/webSocket?conditions=es2015",
+    "rxjs/testing": "https://aistudiocdn.com/rxjs@^7.8.2/testing?conditions=es2015",
+    "rxjs/fetch": "https://aistudiocdn.com/rxjs@^7.8.2/fetch?conditions=es2015",
+    "@angular/compiler": "https://next.esm.sh/@angular/compiler@^20.3.11?external=rxjs",
+    "@angular/platform-browser": "https://next.esm.sh/@angular/platform-browser@^20.3.11?external=rxjs",
+    "@google/genai": "https://next.esm.sh/@google/genai@^1.29.1?external=rxjs",
+    "@angular/core": "https://next.esm.sh/@angular/core@^20.3.11?external=rxjs",
+    "@angular/forms": "https://next.esm.sh/@angular/forms@^20.3.11?external=rxjs",
+    "@angular/common": "https://next.esm.sh/@angular/common@^20.3.11?external=rxjs",
+    "@angular/common/http": "https://next.esm.sh/@angular/common@^20.3.11/http?external=rxjs"
+  }
+}
+</script>
+</head>
+<body class="bg-gray-900 text-gray-100 font-sans">
+  <app-root></app-root>
+</body>
+</html>

@@ -1,0 +1,7 @@
+{
+  "name": "Copy of Gemini AI Creative Suite",
+  "description": "A comprehensive suite of AI tools powered by the Gemini API. Generate and edit images, create videos, chat with an AI, transcribe audio, and get grounded, up-to-date answers from Google Search and Maps.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
